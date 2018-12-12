@@ -1,21 +1,19 @@
 package com.example.aman.blowcandle;
 
-import android.annotation.SuppressLint;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRecorder;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private double DB = 0;// 分贝
     private DevicePolicyManager devicePolicyManager;
     private boolean isAdminActive = false;
+    private boolean flag = false;
 
     private Handler handler = new Handler();
 
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             //指定给那个组件授权
             intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
             startActivity(intent);
-            isAdminActive = true;
         }
     }
 
@@ -123,24 +121,29 @@ public class MainActivity extends AppCompatActivity {
                     DB = 20 * Math.log10(ratio);
                 dbTextView.setText(String.valueOf(DB));
             }
-            //每100毫秒刷新一次
-            handler.postDelayed(this, 100);
-            if(DB < 18){
-                candleImageView.setImageResource(R.drawable.init);
-            }else if(DB < 45){
-                candleImageView.setImageResource(R.drawable.windiness);
-            }else{
-                candleImageView.setImageResource(R.drawable.distinguish);
+            if(flag ){
                 try {
-                    Thread.sleep(1000);
-                    if(isAdminActive){
+                    if(isAdminActive) {
+                        Thread.sleep(1000);
                         devicePolicyManager.lockNow();
-                        Log.i("即将锁屏。","321");
+                        Log.i("即将锁屏。", "321");
                         devicePolicyManager.resetPassword("123321", 0);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+            //每100毫秒刷新一次
+            handler.postDelayed(this, 100);
+            if(DB < 18){
+                flag = false;
+                candleImageView.setImageResource(R.drawable.init);
+            }else if(DB < 45){
+                flag = false;
+                candleImageView.setImageResource(R.drawable.windiness);
+            }else{
+                candleImageView.setImageResource(R.drawable.distinguish);
+                flag = true;
             }
         }
     };

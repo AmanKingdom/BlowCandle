@@ -121,13 +121,14 @@ public class MainActivity extends AppCompatActivity {
                     DB = 20 * Math.log10(ratio);
                 dbTextView.setText(String.valueOf(DB));
             }
-            if(flag ){
+            if(flag){
+                flag = false;
                 try {
                     if(isAdminActive) {
                         Thread.sleep(1000);
                         devicePolicyManager.lockNow();
                         Log.i("即将锁屏。", "321");
-                        devicePolicyManager.resetPassword("123321", 0);
+//                        devicePolicyManager.resetPassword("", 0);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -144,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 candleImageView.setImageResource(R.drawable.distinguish);
                 flag = true;
+                stopRecord();
             }
         }
     };

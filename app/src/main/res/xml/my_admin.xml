@@ -9,10 +9,10 @@
     wipe-data 删除全部的数据
      -->
     <uses-policies>
-        <limit-password/>
-        <watch-login />
-        <reset-password />
+        <!--<limit-password/>-->
+        <!--<watch-login />-->
+        <!--<reset-password />-->
         <force-lock />
-        <wipe-data />
+        <!--<wipe-data />-->
     </uses-policies>
 </device-admin>

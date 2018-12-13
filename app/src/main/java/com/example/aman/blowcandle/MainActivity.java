@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             //指定给那个组件授权
             intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName);
             startActivity(intent);
+            isAdminActive = true;
         }
     }
 
@@ -122,16 +123,15 @@ public class MainActivity extends AppCompatActivity {
                 dbTextView.setText(String.valueOf(DB));
             }
             if(flag){
-                flag = false;
-                try {
-                    if(isAdminActive) {
+                if(isAdminActive) {
+                    try {
                         Thread.sleep(1000);
+                        flag = false;
                         devicePolicyManager.lockNow();
                         Log.i("即将锁屏。", "321");
-//                        devicePolicyManager.resetPassword("", 0);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
             }
             //每100毫秒刷新一次
@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 flag = false;
                 candleImageView.setImageResource(R.drawable.windiness);
             }else{
+                DB = 0; //DB要清零，否则这个未被停掉的线程会一直得到这个条件而循环运行这里
                 candleImageView.setImageResource(R.drawable.distinguish);
                 flag = true;
                 stopRecord();

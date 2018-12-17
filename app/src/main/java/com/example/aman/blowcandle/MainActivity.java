@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             mediaRecorder = null;
             recording = false;
             startBtn.setText("START");
+            handler.removeCallbacks(runnable);
         }
     }
 
@@ -128,14 +129,13 @@ public class MainActivity extends AppCompatActivity {
                         Thread.sleep(1000);
                         flag = false;
                         devicePolicyManager.lockNow();
+                        stopRecord();
                         Log.i("即将锁屏。", "321");
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            //每100毫秒刷新一次
-            handler.postDelayed(this, 100);
             if(DB < 18){
                 flag = false;
                 candleImageView.setImageResource(R.drawable.init);
@@ -146,8 +146,9 @@ public class MainActivity extends AppCompatActivity {
                 DB = 0; //DB要清零，否则这个未被停掉的线程会一直得到这个条件而循环运行这里
                 candleImageView.setImageResource(R.drawable.distinguish);
                 flag = true;
-                stopRecord();
             }
+            //每100毫秒刷新一次
+            handler.postDelayed(this, 100);
         }
     };
 }
